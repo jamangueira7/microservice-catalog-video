@@ -20,7 +20,9 @@ class ListCategoriesUseCaseUnitTest extends TestCase
         $mockPaginate = $this->mockPaginate();
 
         $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
-        $this->mockRepository->shouldReceive('paginate')->andReturn($mockPaginate);
+        $this->mockRepository->shouldReceive('paginate')
+            ->times(1)
+            ->andReturn($mockPaginate);
 
 
         $this->mockDTO = Mockery::mock(ListCategoriesInputDto::class, [
@@ -33,17 +35,6 @@ class ListCategoriesUseCaseUnitTest extends TestCase
         $this->assertCount(0, $response->items);
         $this->assertInstanceOf(ListCategoriesOutputDto::class, $response);
 
-        /*
-         * Spies
-         * Garante a chamada do metodo insert
-         * Caso o metodo não seja chamado gera uma exception
-         */
-
-        $this->spy = Mockery::spy(stdClass::class, CategoryRepositoryInterface::class);
-        $this->spy->shouldReceive('paginate')->andReturn($mockPaginate);
-        $useCase = new ListCategoriesUseCase($this->spy);
-        $useCase->execute($this->mockDTO);
-        $this->spy->showHaveReceived('paginate');
     }
 
     public function testListCategories()
@@ -59,7 +50,9 @@ class ListCategoriesUseCaseUnitTest extends TestCase
         ]);
 
         $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
-        $this->mockRepository->shouldReceive('paginate')->andReturn($mockPaginate);
+        $this->mockRepository->shouldReceive('paginate')
+            ->times(1)
+            ->andReturn($mockPaginate);
 
 
         $this->mockDTO = Mockery::mock(ListCategoriesInputDto::class, [
@@ -72,18 +65,6 @@ class ListCategoriesUseCaseUnitTest extends TestCase
         $this->assertCount(1, $response->items);
         $this->assertInstanceOf(stdClass::class, $response->items[0]);
         $this->assertInstanceOf(ListCategoriesOutputDto::class, $response);
-
-        /*
-         * Spies
-         * Garante a chamada do metodo insert
-         * Caso o metodo não seja chamado gera uma exception
-         */
-
-        $this->spy = Mockery::spy(stdClass::class, CategoryRepositoryInterface::class);
-        $this->spy->shouldReceive('paginate')->andReturn($mockPaginate);
-        $useCase = new ListCategoriesUseCase($this->spy);
-        $useCase->execute($this->mockDTO);
-        $this->spy->showHaveReceived('paginate');
     }
 
     protected function mockPaginate(array $items = [])

@@ -27,9 +27,13 @@ class ListCategoryUseCaseUnitTest extends TestCase
             "teste category"
         ]);
 
-        $this->mockEntity->shouldReceive('id')->andReturn($uuid);
+        $this->mockEntity->shouldReceive('id')
+            ->times(1)
+            ->andReturn($uuid);
+
         $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
         $this->mockRepository->shouldReceive('findById')
+            ->times(1)
             ->with($uuid)
             ->andReturn($this->mockEntity);
 
@@ -47,19 +51,6 @@ class ListCategoryUseCaseUnitTest extends TestCase
         $this->assertEquals($uuid, $response->id);
         $this->assertTrue($response->is_active);
 
-        /*
-         * Spies
-         * Garante a chamada do metodo insert
-         * Caso o metodo não seja chamado gera uma exception
-         */
-
-        $this->spy = Mockery::spy(stdClass::class, CategoryRepositoryInterface::class);
-        $this->spy->shouldReceive('findById')
-            ->with($uuid)
-            ->andReturn($this->mockEntity);
-        $useCase = new ListCategoryUseCase($this->spy);
-        $useCase->execute($this->mockDTO);
-        $this->spy->showHaveReceived('findById');
 
         Mockery::close();
     }
